@@ -1,1 +1,842 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
+    <!-- SEO Meta Tags -->
+    <title>WhatsApp Direto — Envie mensagem sem salvar contato | Grátis</title>
+    <meta name="description" content="Envie mensagens no WhatsApp sem salvar o número na agenda. Rápido, grátis e sem instalar nada. Funciona no celular e computador.">
+    <meta name="keywords" content="whatsapp direto, mandar whatsapp sem salvar contato, enviar mensagem whatsapp sem adicionar, wa.me, whatsapp web sem salvar numero, whatsapp sem agenda">
+    <meta name="author" content="WhatsApp Direto">
+    <meta name="robots" content="index, follow">
+    <link rel="canonical" href="https://SEU-USUARIO.github.io/whatsapp-direto/">
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://SEU-USUARIO.github.io/whatsapp-direto/">
+    <meta property="og:title" content="WhatsApp Direto — Envie mensagem sem salvar contato">
+    <meta property="og:description" content="Envie mensagens no WhatsApp sem salvar o número na agenda. Rápido, grátis e sem instalar nada.">
+    <meta property="og:image" content="https://SEU-USUARIO.github.io/whatsapp-direto/og-image.png">
+    <meta property="og:locale" content="pt_BR">
+
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:url" content="https://SEU-USUARIO.github.io/whatsapp-direto/">
+    <meta property="twitter:title" content="WhatsApp Direto — Envie mensagem sem salvar contato">
+    <meta property="twitter:description" content="Envie mensagens no WhatsApp sem salvar o número na agenda. Rápido, grátis e sem instalar nada.">
+    <meta property="twitter:image" content="https://SEU-USUARIO.github.io/whatsapp-direto/og-image.png">
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="https://cdn-icons-png.flaticon.com/512/733/733585.png">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        :root {
+            --wa-green: #25D366;
+            --wa-green-dark: #128C7E;
+            --wa-green-darker: #075E54;
+            --wa-green-light: #DCF8C6;
+            --wa-green-glow: rgba(37, 211, 102, 0.3);
+            --bg-dark: #0a0f0c;
+            --bg-card: rgba(20, 35, 25, 0.75);
+            --text-primary: #ffffff;
+            --text-secondary: rgba(255,255,255,0.7);
+            --text-muted: rgba(255,255,255,0.45);
+            --border: rgba(37, 211, 102, 0.15);
+            --border-focus: rgba(37, 211, 102, 0.5);
+            --radius: 20px;
+            --radius-sm: 12px;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--bg-dark);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-primary);
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        .bg-animation {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            z-index: 0;
+            overflow: hidden;
+        }
+
+        .bg-animation::before {
+            content: '';
+            position: absolute;
+            top: -50%; left: -50%;
+            width: 200%; height: 200%;
+            background: 
+                radial-gradient(circle at 20% 30%, rgba(37, 211, 102, 0.08) 0%, transparent 50%),
+                radial-gradient(circle at 80% 70%, rgba(18, 140, 126, 0.06) 0%, transparent 50%),
+                radial-gradient(circle at 50% 50%, rgba(7, 94, 84, 0.04) 0%, transparent 60%);
+            animation: bgFloat 20s ease-in-out infinite;
+        }
+
+        @keyframes bgFloat {
+            0%, 100% { transform: translate(0, 0) rotate(0deg); }
+            33% { transform: translate(30px, -30px) rotate(1deg); }
+            66% { transform: translate(-20px, 20px) rotate(-1deg); }
+        }
+
+        .particles {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        .particle {
+            position: absolute;
+            width: 4px; height: 4px;
+            background: var(--wa-green);
+            border-radius: 50%;
+            opacity: 0.3;
+            animation: particleFloat linear infinite;
+        }
+
+        @keyframes particleFloat {
+            0% { transform: translateY(100vh) scale(0); opacity: 0; }
+            10% { opacity: 0.3; }
+            90% { opacity: 0.3; }
+            100% { transform: translateY(-10vh) scale(1); opacity: 0; }
+        }
+
+        .main-card {
+            position: relative;
+            z-index: 1;
+            background: var(--bg-card);
+            backdrop-filter: blur(24px);
+            -webkit-backdrop-filter: blur(24px);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 48px 36px 36px;
+            width: 100%;
+            max-width: 420px;
+            margin: 20px;
+            box-shadow: 
+                0 25px 50px -12px rgba(0, 0, 0, 0.5),
+                0 0 0 1px rgba(37, 211, 102, 0.1),
+                inset 0 1px 0 rgba(255, 255, 255, 0.05);
+            animation: cardAppear 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+            opacity: 0;
+            transform: translateY(30px);
+        }
+
+        @keyframes cardAppear {
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .logo-wrapper {
+            position: relative;
+            display: flex;
+            justify-content: center;
+            margin-bottom: 28px;
+        }
+
+        .logo-glow {
+            position: absolute;
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%);
+            width: 100px; height: 100px;
+            background: radial-gradient(circle, var(--wa-green-glow) 0%, transparent 70%);
+            border-radius: 50%;
+            animation: glowPulse 3s ease-in-out infinite;
+        }
+
+        @keyframes glowPulse {
+            0%, 100% { transform: translate(-50%, -50%) scale(1); opacity: 0.6; }
+            50% { transform: translate(-50%, -50%) scale(1.3); opacity: 0.3; }
+        }
+
+        .logo {
+            width: 72px; height: 72px;
+            position: relative;
+            z-index: 1;
+            filter: drop-shadow(0 0 20px rgba(37, 211, 102, 0.4));
+            animation: logoFloat 4s ease-in-out infinite;
+        }
+
+        @keyframes logoFloat {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-8px); }
+        }
+
+        .logo img { width: 100%; height: 100%; object-fit: contain; }
+
+        .title {
+            font-size: 28px;
+            font-weight: 800;
+            text-align: center;
+            margin-bottom: 8px;
+            background: linear-gradient(135deg, #fff 0%, var(--wa-green-light) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            letter-spacing: -0.5px;
+        }
+
+        .subtitle {
+            font-size: 15px;
+            color: var(--text-secondary);
+            text-align: center;
+            margin-bottom: 32px;
+            font-weight: 400;
+            line-height: 1.5;
+        }
+
+        .country-select { margin-bottom: 12px; }
+
+        .country-select label,
+        .input-group label,
+        .message-group label {
+            display: block;
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 8px;
+        }
+
+        .country-dropdown {
+            width: 100%;
+            padding: 14px 16px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-sm);
+            color: var(--text-primary);
+            font-size: 15px;
+            font-family: inherit;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='rgba(255,255,255,0.5)' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 14px center;
+            padding-right: 40px;
+        }
+
+        .country-dropdown:focus {
+            outline: none;
+            border-color: var(--border-focus);
+            box-shadow: 0 0 0 3px rgba(37, 211, 102, 0.1);
+        }
+
+        .country-dropdown option { background: #1a2e20; color: #fff; }
+
+        .input-group { margin-bottom: 20px; }
+
+        .phone-wrapper {
+            display: flex;
+            gap: 10px;
+            align-items: stretch;
+        }
+
+        .prefix-display {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            padding: 14px 14px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-sm);
+            font-size: 15px;
+            font-weight: 600;
+            color: var(--wa-green);
+            white-space: nowrap;
+            min-width: 70px;
+            justify-content: center;
+        }
+
+        .prefix-display .flag { font-size: 18px; }
+
+        .phone-input {
+            flex: 1;
+            padding: 14px 16px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-sm);
+            color: var(--text-primary);
+            font-size: 16px;
+            font-family: inherit;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            letter-spacing: 0.5px;
+        }
+
+        .phone-input::placeholder { color: var(--text-muted); font-weight: 400; }
+
+        .phone-input:focus {
+            outline: none;
+            border-color: var(--border-focus);
+            box-shadow: 0 0 0 3px rgba(37, 211, 102, 0.1);
+            background: rgba(255, 255, 255, 0.08);
+        }
+
+        .message-group { margin-bottom: 24px; }
+
+        .message-input {
+            width: 100%;
+            padding: 14px 16px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-sm);
+            color: var(--text-primary);
+            font-size: 15px;
+            font-family: inherit;
+            transition: all 0.3s ease;
+            resize: none;
+            min-height: 80px;
+        }
+
+        .message-input::placeholder { color: var(--text-muted); }
+
+        .message-input:focus {
+            outline: none;
+            border-color: var(--border-focus);
+            box-shadow: 0 0 0 3px rgba(37, 211, 102, 0.1);
+            background: rgba(255, 255, 255, 0.08);
+        }
+
+        .char-count {
+            text-align: right;
+            font-size: 11px;
+            color: var(--text-muted);
+            margin-top: 4px;
+        }
+
+        .btn-send {
+            width: 100%;
+            padding: 16px 24px;
+            background: linear-gradient(135deg, var(--wa-green) 0%, var(--wa-green-dark) 100%);
+            border: none;
+            border-radius: var(--radius-sm);
+            color: white;
+            font-size: 16px;
+            font-weight: 700;
+            font-family: inherit;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 4px 20px rgba(37, 211, 102, 0.3);
+        }
+
+        .btn-send::before {
+            content: '';
+            position: absolute;
+            top: 0; left: -100%;
+            width: 100%; height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            transition: left 0.5s ease;
+        }
+
+        .btn-send:hover::before { left: 100%; }
+
+        .btn-send:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 30px rgba(37, 211, 102, 0.4);
+        }
+
+        .btn-send:active { transform: translateY(0); }
+        .btn-send i { font-size: 18px; }
+
+        .error-msg {
+            display: none;
+            align-items: center;
+            gap: 8px;
+            padding: 12px 16px;
+            background: rgba(239, 68, 68, 0.1);
+            border: 1px solid rgba(239, 68, 68, 0.2);
+            border-radius: var(--radius-sm);
+            color: #f87171;
+            font-size: 13px;
+            margin-bottom: 16px;
+            animation: shake 0.5s ease;
+        }
+
+        .error-msg.show { display: flex; }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            20%, 60% { transform: translateX(-5px); }
+            40%, 80% { transform: translateX(5px); }
+        }
+
+        .history-section {
+            margin-top: 28px;
+            padding-top: 24px;
+            border-top: 1px solid var(--border);
+        }
+
+        .history-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+
+        .history-title {
+            font-size: 13px;
+            font-weight: 700;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .history-clear {
+            font-size: 12px;
+            color: var(--text-muted);
+            background: none;
+            border: none;
+            cursor: pointer;
+            transition: color 0.2s;
+            font-family: inherit;
+        }
+
+        .history-clear:hover { color: #f87171; }
+
+        .history-list {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .history-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 14px;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-sm);
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-decoration: none;
+            color: inherit;
+        }
+
+        .history-item:hover {
+            background: rgba(37, 211, 102, 0.08);
+            border-color: rgba(37, 211, 102, 0.25);
+            transform: translateX(4px);
+        }
+
+        .history-item .icon {
+            width: 36px; height: 36px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--wa-green), var(--wa-green-dark));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            color: white;
+            flex-shrink: 0;
+        }
+
+        .history-item .info { flex: 1; min-width: 0; }
+
+        .history-item .number {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--text-primary);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .history-item .time {
+            font-size: 11px;
+            color: var(--text-muted);
+        }
+
+        .history-item .delete-btn {
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            cursor: pointer;
+            padding: 4px;
+            border-radius: 4px;
+            transition: all 0.2s;
+            font-size: 14px;
+        }
+
+        .history-item .delete-btn:hover {
+            color: #f87171;
+            background: rgba(239, 68, 68, 0.1);
+        }
+
+        .history-empty {
+            text-align: center;
+            padding: 20px;
+            color: var(--text-muted);
+            font-size: 13px;
+        }
+
+        .footer {
+            text-align: center;
+            margin-top: 24px;
+            font-size: 12px;
+            color: var(--text-muted);
+        }
+
+        .footer a {
+            color: var(--wa-green);
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .footer a:hover { text-decoration: underline; }
+
+        .tips {
+            margin-top: 20px;
+            padding: 16px;
+            background: rgba(37, 211, 102, 0.05);
+            border: 1px solid rgba(37, 211, 102, 0.1);
+            border-radius: var(--radius-sm);
+        }
+
+        .tips-title {
+            font-size: 12px;
+            font-weight: 700;
+            color: var(--wa-green);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .tips-list {
+            list-style: none;
+            font-size: 13px;
+            color: var(--text-secondary);
+            line-height: 1.8;
+        }
+
+        .tips-list li {
+            display: flex;
+            align-items: flex-start;
+            gap: 8px;
+        }
+
+        .tips-list li::before {
+            content: '•';
+            color: var(--wa-green);
+            font-weight: bold;
+            font-size: 16px;
+            line-height: 1.5;
+        }
+
+        .spinner {
+            display: none;
+            width: 18px; height: 18px;
+            border: 2px solid rgba(255,255,255,0.3);
+            border-top-color: white;
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+        }
+
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        .btn-send.loading .spinner { display: inline-block; }
+        .btn-send.loading .btn-text,
+        .btn-send.loading .btn-icon { display: none; }
+
+        @media (max-width: 480px) {
+            .main-card { margin: 12px; padding: 36px 24px 28px; }
+            .title { font-size: 24px; }
+            .phone-wrapper { flex-direction: column; }
+            .prefix-display { justify-content: flex-start; }
+        }
+    </style>
+</head>
+<body>
+    <div class="bg-animation"></div>
+    <div class="particles" id="particles"></div>
+
+    <div class="main-card">
+        <div class="logo-wrapper">
+            <div class="logo-glow"></div>
+            <div class="logo">
+                <img src="https://assets.stickpng.com/images/580b57fcd9996e24bc43c543.png" alt="WhatsApp Logo">
+            </div>
+        </div>
+
+        <h1 class="title">WhatsApp Direto</h1>
+        <p class="subtitle">Envie mensagens no WhatsApp sem precisar salvar o contato na sua agenda.</p>
+
+        <div class="error-msg" id="errorMsg">
+            <i class="fas fa-exclamation-circle"></i>
+            <span id="errorText">Por favor, digite um número válido.</span>
+        </div>
+
+        <div class="country-select">
+            <label>País</label>
+            <select class="country-dropdown" id="countrySelect">
+                <option value="55" data-flag="🇧🇷" selected>Brasil (+55)</option>
+                <option value="1" data-flag="🇺🇸">Estados Unidos (+1)</option>
+                <option value="351" data-flag="🇵🇹">Portugal (+351)</option>
+                <option value="34" data-flag="🇪🇸">Espanha (+34)</option>
+                <option value="54" data-flag="🇦🇷">Argentina (+54)</option>
+                <option value="56" data-flag="🇨🇱">Chile (+56)</option>
+                <option value="57" data-flag="🇨🇴">Colômbia (+57)</option>
+                <option value="58" data-flag="🇻🇪">Venezuela (+58)</option>
+                <option value="51" data-flag="🇵🇪">Peru (+51)</option>
+                <option value="52" data-flag="🇲🇽">México (+52)</option>
+                <option value="44" data-flag="🇬🇧">Reino Unido (+44)</option>
+                <option value="49" data-flag="🇩🇪">Alemanha (+49)</option>
+                <option value="33" data-flag="🇫🇷">França (+33)</option>
+                <option value="39" data-flag="🇮🇹">Itália (+39)</option>
+                <option value="91" data-flag="🇮🇳">Índia (+91)</option>
+                <option value="86" data-flag="🇨🇳">China (+86)</option>
+                <option value="81" data-flag="🇯🇵">Japão (+81)</option>
+                <option value="82" data-flag="🇰🇷">Coreia do Sul (+82)</option>
+                <option value="61" data-flag="🇦🇺">Austrália (+61)</option>
+                <option value="7" data-flag="🇷🇺">Rússia (+7)</option>
+            </select>
+        </div>
+
+        <div class="input-group">
+            <label>Número de telefone</label>
+            <div class="phone-wrapper">
+                <div class="prefix-display" id="prefixDisplay">
+                    <span class="flag">🇧🇷</span>
+                    <span>+55</span>
+                </div>
+                <input 
+                    type="tel" 
+                    class="phone-input" 
+                    id="phoneInput" 
+                    placeholder="DDD + número (ex: 11999998888)"
+                    maxlength="15"
+                    autocomplete="tel"
+                >
+            </div>
+        </div>
+
+        <div class="message-group">
+            <label>Mensagem (opcional)</label>
+            <textarea 
+                class="message-input" 
+                id="messageInput" 
+                placeholder="Digite uma mensagem pré-definida..."
+                maxlength="500"
+            ></textarea>
+            <div class="char-count"><span id="charCount">0</span>/500</div>
+        </div>
+
+        <button class="btn-send" id="btnSend" onclick="openWhatsApp()">
+            <span class="spinner"></span>
+            <i class="fab fa-whatsapp btn-icon"></i>
+            <span class="btn-text">Abrir WhatsApp</span>
+        </button>
+
+        <div class="tips">
+            <div class="tips-title">
+                <i class="fas fa-lightbulb"></i>
+                Dicas
+            </div>
+            <ul class="tips-list">
+                <li>Digite apenas números, sem espaços ou traços</li>
+                <li>Inclua o DDD sem o zero (ex: 11, 21, 31)</li>
+                <li>Funciona no celular e no computador</li>
+                <li>A mensagem opcional já aparece no chat</li>
+            </ul>
+        </div>
+
+        <div class="history-section" id="historySection" style="display: none;">
+            <div class="history-header">
+                <span class="history-title">Últimos envios</span>
+                <button class="history-clear" onclick="clearHistory()">Limpar</button>
+            </div>
+            <div class="history-list" id="historyList"></div>
+        </div>
+
+        <div class="footer">
+            <p>Não afiliado ao WhatsApp Inc. · <a href="https://wa.me/" target="_blank">wa.me</a></p>
+        </div>
+    </div>
+
+    <script>
+        const countrySelect = document.getElementById('countrySelect');
+        const prefixDisplay = document.getElementById('prefixDisplay');
+        const phoneInput = document.getElementById('phoneInput');
+        const messageInput = document.getElementById('messageInput');
+        const charCount = document.getElementById('charCount');
+        const errorMsg = document.getElementById('errorMsg');
+        const errorText = document.getElementById('errorText');
+        const historyList = document.getElementById('historyList');
+        const historySection = document.getElementById('historySection');
+
+        function createParticles() {
+            const container = document.getElementById('particles');
+            for (let i = 0; i < 20; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'particle';
+                particle.style.left = Math.random() * 100 + '%';
+                particle.style.animationDuration = (Math.random() * 10 + 10) + 's';
+                particle.style.animationDelay = (Math.random() * 10) + 's';
+                particle.style.width = (Math.random() * 4 + 2) + 'px';
+                particle.style.height = particle.style.width;
+                container.appendChild(particle);
+            }
+        }
+        createParticles();
+
+        countrySelect.addEventListener('change', function() {
+            const option = this.options[this.selectedIndex];
+            const flag = option.dataset.flag;
+            const code = option.value;
+            prefixDisplay.innerHTML = `<span class="flag">${flag}</span><span>+${code}</span>`;
+            phoneInput.focus();
+        });
+
+        messageInput.addEventListener('input', function() {
+            charCount.textContent = this.value.length;
+        });
+
+        phoneInput.addEventListener('input', function() {
+            let value = this.value.replace(/\D/g, '');
+            this.value = value;
+            hideError();
+        });
+
+        phoneInput.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') openWhatsApp();
+        });
+
+        messageInput.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter' && !e.shiftKey) {
+                e.preventDefault();
+                openWhatsApp();
+            }
+        });
+
+        function showError(text) {
+            errorText.textContent = text;
+            errorMsg.classList.add('show');
+        }
+
+        function hideError() {
+            errorMsg.classList.remove('show');
+        }
+
+        function openWhatsApp() {
+            const countryCode = countrySelect.value;
+            const phone = phoneInput.value.replace(/\D/g, '');
+            const message = messageInput.value.trim();
+
+            if (!phone) {
+                showError('Por favor, digite um número de telefone.');
+                phoneInput.focus();
+                return;
+            }
+
+            if (phone.length < 8) {
+                showError('O número parece muito curto. Verifique se digitou corretamente.');
+                phoneInput.focus();
+                return;
+            }
+
+            const fullNumber = countryCode + phone;
+            let url = `https://wa.me/${fullNumber}`;
+
+            if (message) {
+                url += `?text=${encodeURIComponent(message)}`;
+            }
+
+            saveToHistory(fullNumber, countrySelect.options[countrySelect.selectedIndex].dataset.flag);
+            window.open(url, '_blank');
+        }
+
+        function getHistory() {
+            try {
+                return JSON.parse(localStorage.getItem('waDirectHistory')) || [];
+            } catch {
+                return [];
+            }
+        }
+
+        function saveToHistory(number, flag) {
+            let history = getHistory();
+            history = history.filter(h => h.number !== number);
+            history.unshift({
+                number: number,
+                flag: flag,
+                time: new Date().toLocaleString('pt-BR', { 
+                    day: '2-digit', 
+                    month: '2-digit', 
+                    hour: '2-digit', 
+                    minute: '2-digit' 
+                })
+            });
+            history = history.slice(0, 5);
+            localStorage.setItem('waDirectHistory', JSON.stringify(history));
+            renderHistory();
+        }
+
+        function deleteFromHistory(number, event) {
+            event.preventDefault();
+            event.stopPropagation();
+            let history = getHistory().filter(h => h.number !== number);
+            localStorage.setItem('waDirectHistory', JSON.stringify(history));
+            renderHistory();
+        }
+
+        function clearHistory() {
+            localStorage.removeItem('waDirectHistory');
+            renderHistory();
+        }
+
+        function renderHistory() {
+            const history = getHistory();
+
+            if (history.length === 0) {
+                historySection.style.display = 'none';
+                return;
+            }
+
+            historySection.style.display = 'block';
+            historyList.innerHTML = history.map(h => `
+                <a href="https://wa.me/${h.number}" target="_blank" class="history-item">
+                    <div class="icon"><i class="fab fa-whatsapp"></i></div>
+                    <div class="info">
+                        <div class="number">${h.flag} +${h.number}</div>
+                        <div class="time">${h.time}</div>
+                    </div>
+                    <button class="delete-btn" onclick="deleteFromHistory('${h.number}', event)" title="Remover">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </a>
+            `).join('');
+        }
+
+        renderHistory();
+
+        window.addEventListener('load', () => {
+            setTimeout(() => phoneInput.focus(), 500);
+        });
+    </script>
+</body>
+</html>
